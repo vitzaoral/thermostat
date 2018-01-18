@@ -1,2 +1,2 @@
 # thermostat
-Thermostat ESP2866 project
+Wemos D1 mini WiFi thermostat
