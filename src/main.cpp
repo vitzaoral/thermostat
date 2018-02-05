@@ -8,8 +8,10 @@ MetheoData metheoData;
 OledDisplay oledDisplay;
 InternetConnection connection;
 
-Ticker timer1;
-Ticker timer2;
+Ticker timerReadDataAndDisplay;
+Ticker timerSendDataToInternet;
+
+int relayPin = D5;
 
 // Connections to APIs are OK
 bool apisAreConnected = false;
@@ -45,23 +47,22 @@ void setup()
     // TODO: vyzkouset OTA
     Serial.begin(9600);
     delay(100);
+    pinMode(relayPin, OUTPUT);
     initializeInternetConnection();
     
-    timer1.setCallback(readMetheoDataAndDisplay);
-    timer1.setInterval(20000);
-    timer1.start();
+    timerReadDataAndDisplay.setCallback(readMetheoDataAndDisplay);
+    timerReadDataAndDisplay.setInterval(20000);
+    timerReadDataAndDisplay.start();
 
-    timer2.setCallback(sendDataToInternet);
-    timer2.setInterval(60000);
-    timer2.start();
+    timerSendDataToInternet.setCallback(sendDataToInternet);
+    timerSendDataToInternet.setInterval(60000);
+    timerSendDataToInternet.start();
 }
 
 // Excecute code in forever loop
 void loop()
 {
-    // readMetheoDataAndDisplay();
-    // sendDataToInternet();
-    //delay(30000);
-    timer1.update();
-    timer2.update();
+    timerReadDataAndDisplay.update();
+    timerSendDataToInternet.update();
+    connection.runBlynk();
 }
