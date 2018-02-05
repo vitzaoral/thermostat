@@ -7,24 +7,47 @@ MetheoData metheoData;
 OledDisplay oledDisplay;
 InternetConnection connection;
 
+// Connections to APIs are OK
+bool apisAreConnected = false;
+
+void readMetheoDataAndDisplay()
+{
+
+    metheoData.setData();
+    oledDisplay.printMetheoDataToDisplay(metheoData);
+}
+
+void sendDataToInternet()
+{
+    if (apisAreConnected)
+    {
+        connection.setMeteoDataToThingSpeakObject(metheoData);
+        connection.sendDataToThingSpeakApi();
+        Serial.println("Data was sended");
+    }
+}
+
+void initializeInternetConnection()
+{
+    if (connection.initializeThingSpeak())
+    {
+        apisAreConnected = connection.initializeBlynk();
+    }
+}
+
 // Set up environment before loop
 void setup()
 {
     // TODO: vyzkouset OTA
     Serial.begin(9600);
     delay(100);
-    connection.initialize();
+    initializeInternetConnection();
 }
 
 // Excecute code in forever loop
 void loop()
 {
-    metheoData.setData();
-    oledDisplay.printMetheoDataToDisplay(metheoData);
-    connection.setMeteoDataToThingSpeakObject(metheoData);
-    connection.sendDataToThingSpeakApi();
-
-    // TODO: co kdyz chci zobrazovat data co 10 sekund ale posilat je co 1 minutu
-    // pouzit millis() nebo ticker.h
-    delay(60000);
+    readMetheoDataAndDisplay();
+    sendDataToInternet();
+    delay(30000);
 }

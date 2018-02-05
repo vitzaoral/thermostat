@@ -1,5 +1,6 @@
 #include "InternetConnection.h"
 #include "../../src/settings.cpp"
+#include <BlynkSimpleEsp8266.h>
 
 WiFiClient client;
 Settings settings;
@@ -8,25 +9,72 @@ const char *thingSpeakWriteApiKey = settings.thingSpeakWriteApiKey;
 const unsigned long thingSpeakChannelId = settings.thingSpeakChannelId;
 const char *ssid = settings.ssid;
 const char *password = settings.password;
-const char *server = settings.thingSpeakserver;
+const char *blynkAuth = settings.blynkAuth;
 
-// Initialize WiFi connection and ThingSpeak
-void InternetConnection::initialize(void)
+// number of attempts to connecting WIFI,API etc.
+const int timeout = 10;
+
+// Enable/disable blinking using virt pin 1
+BLYNK_WRITE(1)
+{
+  if (param.asInt()) {
+    digitalWrite(D5, HIGH);
+  } else {
+    digitalWrite(D5, LOW);
+  }
+}
+
+// Initialize WiFi connection and ThingSpeak. Return true if connection is sucessfull.
+bool InternetConnection::initializeThingSpeak(void)
 {
     WiFi.begin(ssid, password);
 
     Serial.print("WiFi connecting to: ");
     Serial.println(ssid);
-    // TODO: resit jen nekolik poctu pripojeni pokud WIFI neni at nejede while donekonecna
+    int i = 0;
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
         Serial.print(".");
+        if (i == timeout)
+        {
+            Serial.println("Timeout on WiFi connection");
+            return false;
+        }
+        i++;
     }
     Serial.println("");
     Serial.println("WiFi connected");
 
     ThingSpeak.begin(client);
+    return true;
+}
+
+// Initialize WiFi connection and Blynk. Return true if connection is sucessfull.
+bool InternetConnection::initializeBlynk(void)
+{
+    Serial.println("WiFi connecting to Blynk");
+    Blynk.begin(blynkAuth, ssid, password);
+    int i = 0;
+
+    while (Blynk.connect() != 1)
+    {
+        delay(500);
+        Serial.print(".");
+        if (i == timeout)
+        {
+            Serial.println("Timeout on Blynk connection");
+            return false;
+        }
+        i++;
+    }
+
+    Serial.println("Blynk connected");
+    return true;
+}
+
+void InternetConnection::runBlynk(void) {
+    Blynk.run();
 }
 
 void InternetConnection::setMeteoDataToThingSpeakObject(MetheoData metheoData)
