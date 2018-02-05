@@ -8,6 +8,7 @@
 class InternetConnection
 {
 public:
+  InternetConnection(int);
   bool initializeThingSpeak(void);
   bool initializeBlynk(void);
   void setMeteoDataToThingSpeakObject(MetheoData);

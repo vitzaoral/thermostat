@@ -4,14 +4,16 @@
 #include <InternetConnection.h>
 #include <Ticker.h>
 
+const int relayPinAddress = D5;
+const int readMetheoDataAndDisplayInterval = 10000;
+const int sendDataToInternetInterval = 30000;
+
 MetheoData metheoData;
 OledDisplay oledDisplay;
-InternetConnection connection;
+InternetConnection connection(relayPinAddress);
 
 Ticker timerReadDataAndDisplay;
 Ticker timerSendDataToInternet;
-
-int relayPin = D5;
 
 // Connections to APIs are OK
 bool apisAreConnected = false;
@@ -41,22 +43,26 @@ void initializeInternetConnection()
     }
 }
 
+void setupTimers() {
+    timerReadDataAndDisplay.setCallback(readMetheoDataAndDisplay);
+    timerReadDataAndDisplay.setInterval(readMetheoDataAndDisplayInterval);
+    timerReadDataAndDisplay.start();
+
+    timerSendDataToInternet.setCallback(sendDataToInternet);
+    timerSendDataToInternet.setInterval(sendDataToInternetInterval);
+    timerSendDataToInternet.start();
+}
+
 // Set up environment before loop
 void setup()
 {
     // TODO: vyzkouset OTA
     Serial.begin(9600);
     delay(100);
-    pinMode(relayPin, OUTPUT);
-    initializeInternetConnection();
     
-    timerReadDataAndDisplay.setCallback(readMetheoDataAndDisplay);
-    timerReadDataAndDisplay.setInterval(20000);
-    timerReadDataAndDisplay.start();
-
-    timerSendDataToInternet.setCallback(sendDataToInternet);
-    timerSendDataToInternet.setInterval(60000);
-    timerSendDataToInternet.start();
+    pinMode(relayPinAddress, OUTPUT);
+    initializeInternetConnection();
+    setupTimers();
 }
 
 // Excecute code in forever loop

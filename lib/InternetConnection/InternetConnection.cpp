@@ -14,16 +14,24 @@ const char *blynkAuth = settings.blynkAuth;
 // number of attempts to connecting WIFI,API etc.
 const int timeout = 10;
 
+int relayPin;
+
 // Enable/disable blinking using virt pin 1
 BLYNK_WRITE(1)
 {
   
     // TODO: D5 natvrdo, posilat si z inicializace..
   if (param.asInt()) {
-    digitalWrite(D5, HIGH);
+    digitalWrite(relayPin, HIGH);
   } else {
-    digitalWrite(D5, LOW);
+    digitalWrite(relayPin, LOW);
   }
+}
+
+// Initialize and get metheorological data
+InternetConnection::InternetConnection(int relayPinAddress)
+{
+    relayPin = relayPinAddress;
 }
 
 // Initialize WiFi connection and ThingSpeak. Return true if connection is sucessfull.
