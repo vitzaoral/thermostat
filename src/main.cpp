@@ -2,10 +2,14 @@
 #include <MetheoData.h>
 #include <OledDisplay.h>
 #include <InternetConnection.h>
+#include <Ticker.h>
 
 MetheoData metheoData;
 OledDisplay oledDisplay;
 InternetConnection connection;
+
+Ticker timer1;
+Ticker timer2;
 
 // Connections to APIs are OK
 bool apisAreConnected = false;
@@ -42,12 +46,22 @@ void setup()
     Serial.begin(9600);
     delay(100);
     initializeInternetConnection();
+    
+    timer1.setCallback(readMetheoDataAndDisplay);
+    timer1.setInterval(20000);
+    timer1.start();
+
+    timer2.setCallback(sendDataToInternet);
+    timer2.setInterval(60000);
+    timer2.start();
 }
 
 // Excecute code in forever loop
 void loop()
 {
-    readMetheoDataAndDisplay();
-    sendDataToInternet();
-    delay(30000);
+    // readMetheoDataAndDisplay();
+    // sendDataToInternet();
+    //delay(30000);
+    timer1.update();
+    timer2.update();
 }
