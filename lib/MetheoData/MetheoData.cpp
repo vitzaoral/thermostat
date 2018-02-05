@@ -1,6 +1,6 @@
 #include "MetheoData.h"
 
-SHT3X sht30(0x45);
+SHT3X sht30(0x44);
 Adafruit_BMP085 bmp;
 
 // Initialize and get metheorological data

@@ -8,7 +8,7 @@ const char *thingSpeakWriteApiKey = settings.thingSpeakWriteApiKey;
 const unsigned long thingSpeakChannelId = settings.thingSpeakChannelId;
 const char *ssid = settings.ssid;
 const char *password = settings.password;
-const char *server = settings.server;
+const char *server = settings.thingSpeakserver;
 
 // Initialize WiFi connection and ThingSpeak
 void InternetConnection::initialize(void)
