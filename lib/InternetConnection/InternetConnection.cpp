@@ -17,6 +17,7 @@ const int timeout = 10;
 // Enable/disable blinking using virt pin 1
 BLYNK_WRITE(1)
 {
+    // TODO: D5 natvrdo, posilat si z inicializace..
   if (param.asInt()) {
     digitalWrite(D5, HIGH);
   } else {
