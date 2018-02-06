@@ -27,7 +27,7 @@ void OledDisplay::printMetheoDataToDisplay(MetheoData data) {
     display.println(" %");
     // presure
     display.print("P:");
-    display.print(data.bmpPresure / 100);
+    display.print(data.bmpPresure);
     display.println(" h");
     // altitude
     display.print("A:");

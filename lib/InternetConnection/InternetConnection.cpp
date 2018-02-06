@@ -16,11 +16,9 @@ const int timeout = 10;
 
 int relayPin;
 
-// Enable/disable blinking using virt pin 1
-BLYNK_WRITE(1)
+// Enable/disable relay using virt pin 0
+BLYNK_WRITE(0)
 {
-  
-    // TODO: D5 natvrdo, posilat si z inicializace..
   if (param.asInt()) {
     digitalWrite(relayPin, HIGH);
   } else {
@@ -111,4 +109,22 @@ bool InternetConnection::sendDataToThingSpeakApi(void)
         Serial.println(status);
     }
     return status;
+}
+
+void InternetConnection::sendDataToBlynk(MetheoData metheoData)
+{
+    // create data to send to Blynk. For some reason need to call connect.
+    if (Blynk.connect() == 1)
+    {
+        Blynk.run();
+        Blynk.virtualWrite(1, metheoData.shtTemperature);
+        Blynk.virtualWrite(2, metheoData.bmpTemperature);
+        Blynk.virtualWrite(3, metheoData.shtHumidity);
+        Blynk.virtualWrite(4, metheoData.bmpPresure);
+        Serial.println("Send data to Blynk OK");
+    }
+    else
+    {
+        Serial.println("Error during sending data to Blynk");
+    }
 }

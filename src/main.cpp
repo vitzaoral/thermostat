@@ -6,7 +6,7 @@
 
 const int relayPinAddress = D5;
 const int readMetheoDataAndDisplayInterval = 10000;
-const int sendDataToInternetInterval = 30000;
+const int sendDataToInternetInterval = 60000;
 
 MetheoData metheoData;
 OledDisplay oledDisplay;
@@ -31,6 +31,7 @@ void sendDataToInternet()
     {
         connection.setMeteoDataToThingSpeakObject(metheoData);
         connection.sendDataToThingSpeakApi();
+        connection.sendDataToBlynk(metheoData);
         Serial.println("Data was sended");
     }
 }
