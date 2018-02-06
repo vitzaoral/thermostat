@@ -3,6 +3,7 @@
 #include <OledDisplay.h>
 #include <InternetConnection.h>
 #include <Ticker.h>
+#include <EEPROM.h>
 
 const int relayPinAddress = D5;
 const int readMetheoDataAndDisplayInterval = 10000;
@@ -57,6 +58,8 @@ void setupTimers() {
 // Set up environment before loop
 void setup()
 {
+    // Two bytes for device status (enabled/disabled, required temperature)
+    EEPROM.begin(2); 
     // TODO: vyzkouset OTA
     Serial.begin(9600);
     delay(100);

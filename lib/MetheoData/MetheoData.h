@@ -13,9 +13,10 @@ public:
   float shtHumidity;
   float bmpPresure;
   float bmpTemperature;
-  float bmpRealAltitude;
+  float averageTemperature;
 
   void setData(void);
+  bool dataAreValid(void);
 };
 
 #endif
