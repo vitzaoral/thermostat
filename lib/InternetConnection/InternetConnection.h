@@ -15,6 +15,7 @@ public:
   void runBlynk(void);
   void sendDataToBlynk(MetheoData);
   static void setStatusToBlynk(String, String);
+  void setIsHeatingToBlynk(bool);
 };
 
 #endif

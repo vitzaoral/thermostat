@@ -24,12 +24,14 @@ void setToEEPROM(int address, int value)
 // Enable/disable thermostat, set value to EEPROM to address 1
 BLYNK_WRITE(0)
 {
+    // TODO: slo by okamzite pinkout metodu controllThermostat z mainu?
     param.asInt() ? setToEEPROM(1, true) :  setToEEPROM(1, false);
 }
 
 // Set temperature slider, write back to blynk to confirm show
 BLYNK_WRITE(V10)
 {
+    // TODO: slo by okamzite pinkout metodu controllThermostat z mainu?
     int requiredTemp = param.asInt();
     Blynk.virtualWrite(V8, requiredTemp);
     Serial.println("Target Temperature is " + String(requiredTemp) + "°C");
@@ -41,6 +43,13 @@ void InternetConnection::setStatusToBlynk(String status, String color)
 {
     Blynk.virtualWrite(V9, status);
     Blynk.setProperty(V9, "color", color);
+}
+
+// Send isHeating status to Blynk
+void InternetConnection::setIsHeatingToBlynk(bool isHeating)
+{
+    Blynk.virtualWrite(V11, isHeating ? 1 : 0);
+   // Blynk.setProperty(V11, "color", isHeating ? "#00FF00" : "#FF0000");
 }
 
 // Initialize WiFi connection and ThingSpeak. Return true if connection is sucessfull.
@@ -125,6 +134,7 @@ bool InternetConnection::sendDataToThingSpeakApi(void)
 
 void InternetConnection::sendDataToBlynk(MetheoData metheoData)
 {
+    // TODO: overit jestli musi byt a overit jestli musi byt vsude Blynk.run, mozna staci jen v Loop()
     // create data to send to Blynk. For some reason need to call connect.
     if (Blynk.connect() == 1)
     {

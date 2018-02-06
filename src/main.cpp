@@ -32,23 +32,27 @@ void controllThermostat(MetheoData data)
             {
                 digitalWrite(relayPinAddress, HIGH);
                 InternetConnection::setStatusToBlynk("Heating ON", "#00FF00");
+                connection.setIsHeatingToBlynk(true);
             }
             else
             {
                 digitalWrite(relayPinAddress, LOW);
                 InternetConnection::setStatusToBlynk("Heating OFF", "#FF0000");
+                connection.setIsHeatingToBlynk(false);
             }
         }
         else
         {
             digitalWrite(relayPinAddress, LOW);
             InternetConnection::setStatusToBlynk("Heating not enabled", "#FF0000");
+            connection.setIsHeatingToBlynk(false);
         }
     }
     else
     {
         digitalWrite(relayPinAddress, LOW);
         InternetConnection::setStatusToBlynk("Data are invalid, heating OFF.", "#FF0000");
+        connection.setIsHeatingToBlynk(false);
     }
 }
 
