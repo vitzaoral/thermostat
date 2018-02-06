@@ -8,13 +8,13 @@
 class InternetConnection
 {
 public:
-  InternetConnection(int);
   bool initializeThingSpeak(void);
   bool initializeBlynk(void);
   void setMeteoDataToThingSpeakObject(MetheoData);
   bool sendDataToThingSpeakApi(void);
   void runBlynk(void);
   void sendDataToBlynk(MetheoData);
+  static void setStatusToBlynk(String, String);
 };
 
 #endif

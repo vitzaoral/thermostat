@@ -15,35 +15,16 @@ const char *blynkAuth = settings.blynkAuth;
 // number of attempts to connecting WIFI, API etc.
 const int timeout = 10;
 
-int relayPin;
-
-void setStatusToBlynk(String status, String color)
-{
-    Blynk.virtualWrite(V9, status);
-    Blynk.setProperty(V9, "color", color);
-}
-
 void setToEEPROM(int address, int value)
 {
     EEPROM.write(address, value); 
     EEPROM.commit(); 
 }
 
-// Enable/disable relay using virt pin 0
+// Enable/disable thermostat, set value to EEPROM to address 1
 BLYNK_WRITE(0)
 {
-    if (param.asInt())
-    {
-        digitalWrite(relayPin, HIGH);
-        setStatusToBlynk("Heating ON", "#00FF00");
-        setToEEPROM(1, 1);
-    }
-    else
-    {
-        digitalWrite(relayPin, LOW);
-        setStatusToBlynk("Heating OFF", "#FF0000");
-        setToEEPROM(1, 0);
-    }
+    param.asInt() ? setToEEPROM(1, true) :  setToEEPROM(1, false);
 }
 
 // Set temperature slider, write back to blynk to confirm show
@@ -55,10 +36,11 @@ BLYNK_WRITE(V10)
     setToEEPROM(2, requiredTemp);
 }
 
-// Initialize and get metheorological data
-InternetConnection::InternetConnection(int relayPinAddress)
+// Send message status to Blynk
+void InternetConnection::setStatusToBlynk(String status, String color)
 {
-    relayPin = relayPinAddress;
+    Blynk.virtualWrite(V9, status);
+    Blynk.setProperty(V9, "color", color);
 }
 
 // Initialize WiFi connection and ThingSpeak. Return true if connection is sucessfull.

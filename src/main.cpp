@@ -6,24 +6,57 @@
 #include <EEPROM.h>
 
 const int relayPinAddress = D5;
-const int readMetheoDataAndDisplayInterval = 10000;
+const int readMetheoDataDisplayDataControllThermostatInterval = 10000;
 const int sendDataToInternetInterval = 60000;
 
 MetheoData metheoData;
 OledDisplay oledDisplay;
-InternetConnection connection(relayPinAddress);
+InternetConnection connection;
 
-Ticker timerReadDataAndDisplay;
+Ticker timerReadDataDisplayDataControllThermostat;
 Ticker timerSendDataToInternet;
 
 // Connections to APIs are OK
 bool apisAreConnected = false;
 
-void readMetheoDataAndDisplay()
+// Set thermostat ON/OFF
+void controllThermostat(MetheoData data)
 {
+    // TODO: refactor
+    if (data.dataAreValid())
+    {
+        if (EEPROM.read(1) == true)
+        {
+            int requiredTemperature = EEPROM.read(2);
+            if (requiredTemperature >= 10 && requiredTemperature <= 25 && data.averageTemperature <= requiredTemperature )
+            {
+                digitalWrite(relayPinAddress, HIGH);
+                InternetConnection::setStatusToBlynk("Heating ON", "#00FF00");
+            }
+            else
+            {
+                digitalWrite(relayPinAddress, LOW);
+                InternetConnection::setStatusToBlynk("Heating OFF", "#FF0000");
+            }
+        }
+        else
+        {
+            digitalWrite(relayPinAddress, LOW);
+            InternetConnection::setStatusToBlynk("Heating not enabled", "#FF0000");
+        }
+    }
+    else
+    {
+        digitalWrite(relayPinAddress, LOW);
+        InternetConnection::setStatusToBlynk("Data are invalid, heating OFF.", "#FF0000");
+    }
+}
 
+void readMetheoDataDisplayDataControllThermostat()
+{
     metheoData.setData();
     oledDisplay.printMetheoDataToDisplay(metheoData);
+    controllThermostat(metheoData);
 }
 
 void sendDataToInternet()
@@ -45,10 +78,11 @@ void initializeInternetConnection()
     }
 }
 
-void setupTimers() {
-    timerReadDataAndDisplay.setCallback(readMetheoDataAndDisplay);
-    timerReadDataAndDisplay.setInterval(readMetheoDataAndDisplayInterval);
-    timerReadDataAndDisplay.start();
+void setupTimers()
+{
+    timerReadDataDisplayDataControllThermostat.setCallback(readMetheoDataDisplayDataControllThermostat);
+    timerReadDataDisplayDataControllThermostat.setInterval(readMetheoDataDisplayDataControllThermostatInterval);
+    timerReadDataDisplayDataControllThermostat.start();
 
     timerSendDataToInternet.setCallback(sendDataToInternet);
     timerSendDataToInternet.setInterval(sendDataToInternetInterval);
@@ -59,11 +93,11 @@ void setupTimers() {
 void setup()
 {
     // Two bytes for device status (enabled/disabled, required temperature)
-    EEPROM.begin(2); 
+    EEPROM.begin(2);
     // TODO: vyzkouset OTA
     Serial.begin(9600);
     delay(100);
-    
+
     pinMode(relayPinAddress, OUTPUT);
     initializeInternetConnection();
     setupTimers();
@@ -72,7 +106,7 @@ void setup()
 // Excecute code in forever loop
 void loop()
 {
-    timerReadDataAndDisplay.update();
+    timerReadDataDisplayDataControllThermostat.update();
     timerSendDataToInternet.update();
     connection.runBlynk();
 }
