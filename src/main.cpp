@@ -22,7 +22,7 @@ bool apisAreConnected = false;
 // Set thermostat ON/OFF
 void controllThermostat(MetheoData data)
 {
-    // TODO: refactor
+    // TODO: refactor, asi strcit do InternetConnection :-/
     if (data.dataAreValid())
     {
         if (EEPROM.read(1) == true)

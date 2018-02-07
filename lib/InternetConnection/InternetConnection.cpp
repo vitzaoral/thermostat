@@ -24,7 +24,7 @@ void setToEEPROM(int address, int value)
 // Enable/disable thermostat, set value to EEPROM to address 1
 BLYNK_WRITE(0)
 {
-    // TODO: slo by okamzite pinkout metodu controllThermostat z mainu?
+    // TODO: slo by okamzite pinkout metodu controllThermostat z mainu? Asi jedine presunout tu metodu sem :-/
     param.asInt() ? setToEEPROM(1, true) :  setToEEPROM(1, false);
 }
 
@@ -81,24 +81,13 @@ bool InternetConnection::initializeThingSpeak(void)
 // Initialize WiFi connection and Blynk. Return true if connection is sucessfull.
 bool InternetConnection::initializeBlynk(void)
 {
+    // TODO: problem behu donekonecna, pokud mam spatny klic (pokud nefunguje Blynk tak mozna ne). Napsat na forum Blynku.
     Serial.println("WiFi connecting to Blynk");
     Blynk.begin(blynkAuth, ssid, password);
-    int i = 0;
-
-    while (Blynk.connect() != 1)
-    {
-        delay(500);
-        Serial.print(".");
-        if (i == timeout)
-        {
-            Serial.println("Timeout on Blynk connection");
-            return false;
-        }
-        i++;
-    }
-
-    Serial.println("Blynk connected");
-    return true;
+    Blynk.run();
+    
+    Serial.println(Blynk.connected() ? "Blynk connected" : "Timeout on Blynk");
+    return Blynk.connected();
 }
 
 void InternetConnection::runBlynk(void)
@@ -134,19 +123,17 @@ bool InternetConnection::sendDataToThingSpeakApi(void)
 
 void InternetConnection::sendDataToBlynk(MetheoData metheoData)
 {
-    // TODO: overit jestli musi byt a overit jestli musi byt vsude Blynk.run, mozna staci jen v Loop()
-    // create data to send to Blynk. For some reason need to call connect.
-    if (Blynk.connect() == 1)
+    if (Blynk.connect())
     {
-        Blynk.run();
         Blynk.virtualWrite(V1, metheoData.shtTemperature);
         Blynk.virtualWrite(V2, metheoData.bmpTemperature);
         Blynk.virtualWrite(V3, metheoData.shtHumidity);
         Blynk.virtualWrite(V4, metheoData.bmpPresure);
         Serial.println("Send data to Blynk OK");
+        Blynk.run();
     }
     else
     {
-        Serial.println("Error during sending data to Blynk");
+        Serial.println("Blynk is not connected.");
     }
 }
