@@ -15,15 +15,9 @@ void OledDisplay::printMetheoDataToDisplay(MetheoData data)
     prepareDisplay();
 
     // temperature SHT
-    display.println("Ts:" + String(data.shtTemperature) + " C");
-    // temperature BMP
-    display.println("Tb:" + String(data.bmpTemperature) + " C");
-    // temperature average
-    display.println("Ta:" + String(data.averageTemperature) + " C");
+    display.println("T:" + String(data.shtTemperature) + " C");
     // humidity
     display.println("H:" + String(data.shtHumidity) + " %");
-    // presure
-    display.println("P:" + String(data.bmpPresure) + " h");
 
     display.display();
 }

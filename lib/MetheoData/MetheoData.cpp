@@ -1,41 +1,36 @@
 #include "MetheoData.h"
 
-SHT3X sht30(0x44);
-Adafruit_BMP085 bmp;
+Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
 // Initialize and get metheorological data
 MetheoData::MetheoData()
 {
-    if (!bmp.begin())
+    if (!sht31.begin(0x44))
     {
-        Serial.println("Could not find a valid BMP100 sensor on oaddress 0x45!");
+        Serial.println("Could not find a valid SHT31X sensor on oaddress 0x44!");
     }
 }
 
 void MetheoData::setData(void)
 {
-    shtTemperature = 0;
-    shtHumidity = 0;
-    bmpPresure = bmp.readPressure() / 100.0;
-    averageTemperature = bmpTemperature = bmp.readTemperature();
+    shtTemperature = sht31.readTemperature();
+    shtHumidity = sht31.readHumidity();
 
-    if (sht30.get() == 0)
+    if (isnan(shtTemperature))
     {
-        shtTemperature = sht30.cTemp;
-        shtHumidity = sht30.humidity;
-        averageTemperature = (bmpTemperature + shtTemperature) / 2.0;
+        Serial.println("Error during read temperature");
     }
-    else
+    if (isnan(shtHumidity))
     {
-        Serial.println("SHT30 sensor error!");
+        Serial.println("Error during read humidity");
     }
+
+    Serial.println(shtTemperature);
+    Serial.println(shtHumidity);
 }
 
 bool MetheoData::dataAreValid(void)
 {
     return shtTemperature <= 50.0 && shtTemperature >= 5.0 &&
-           shtHumidity <= 100.0 && shtHumidity >= 0.0 &&
-           bmpPresure <= 1200.0 && bmpPresure >= 800.0 &&
-           bmpTemperature <= 50.0 && bmpTemperature >= 5.0 &&
-           averageTemperature <= 50.0 && averageTemperature >= 5.0;
+           shtHumidity <= 100.0 && shtHumidity >= 0.0;
 }

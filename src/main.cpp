@@ -28,7 +28,7 @@ void controllThermostat(MetheoData data)
         if (EEPROM.read(1) == true)
         {
             int requiredTemperature = EEPROM.read(2);
-            if (requiredTemperature >= 10 && requiredTemperature <= 25 && data.averageTemperature <= requiredTemperature )
+            if (requiredTemperature >= 10 && requiredTemperature <= 25 && data.shtTemperature <= requiredTemperature )
             {
                 digitalWrite(relayPinAddress, HIGH);
                 InternetConnection::setStatusToBlynk("Heating ON", "#00FF00");

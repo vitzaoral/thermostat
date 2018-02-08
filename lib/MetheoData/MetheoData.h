@@ -2,8 +2,7 @@
 #define __MetheoData_H
 
 #include <Arduino.h>
-#include <WEMOS_SHT3X.h>
-#include <Adafruit_BMP085.h>
+#include <Adafruit_SHT31.h>
 
 class MetheoData
 {
@@ -11,9 +10,6 @@ public:
   MetheoData();
   float shtTemperature;
   float shtHumidity;
-  float bmpPresure;
-  float bmpTemperature;
-  float averageTemperature;
 
   void setData(void);
   bool dataAreValid(void);
