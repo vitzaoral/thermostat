@@ -1,4 +1,5 @@
 #include "OledDisplay.h"
+#include <EEPROM.h>
 
 Adafruit_SSD1306 display(OLED_RESET);
 
@@ -18,6 +19,11 @@ void OledDisplay::printMetheoDataToDisplay(MetheoData data)
     display.println("T:" + String(data.shtTemperature) + " C");
     // humidity
     display.println("H:" + String(data.shtHumidity) + " %");
+    
+    // TODO: EEPROM konstanty 1 a 2, nejak ucesat, i na jinych mistech
+    display.println();
+    display.println(EEPROM.read(1) ? "ON" : "OFF");
+    display.println("Set: " + String(EEPROM.read(2)) + "C");
 
     display.display();
 }
