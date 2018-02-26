@@ -17,15 +17,15 @@ const int timeout = 10;
 
 void setToEEPROM(int address, int value)
 {
-    EEPROM.write(address, value); 
-    EEPROM.commit(); 
+    EEPROM.write(address, value);
+    EEPROM.commit();
 }
 
 // Enable/disable thermostat, set value to EEPROM to address 1
 BLYNK_WRITE(0)
 {
     // TODO: slo by okamzite pinkout metodu controllThermostat z mainu? Asi jedine presunout tu metodu sem :-/
-    param.asInt() ? setToEEPROM(1, true) :  setToEEPROM(1, false);
+    param.asInt() ? setToEEPROM(1, true) : setToEEPROM(1, false);
 }
 
 // Set temperature slider, write back to blynk to confirm show
@@ -49,7 +49,7 @@ void InternetConnection::setStatusToBlynk(String status, String color)
 void InternetConnection::setIsHeatingToBlynk(bool isHeating)
 {
     Blynk.virtualWrite(V11, isHeating ? 1 : 0);
-   // Blynk.setProperty(V11, "color", isHeating ? "#00FF00" : "#FF0000");
+    // Blynk.setProperty(V11, "color", isHeating ? "#00FF00" : "#FF0000");
 }
 
 // Initialize WiFi connection and ThingSpeak. Return true if connection is sucessfull.
@@ -81,12 +81,18 @@ bool InternetConnection::initializeThingSpeak(void)
 // Initialize WiFi connection and Blynk. Return true if connection is sucessfull.
 bool InternetConnection::initializeBlynk(void)
 {
-    // TODO: problem behu donekonecna, pokud mam spatny klic (pokud nefunguje Blynk tak mozna ne). Napsat na forum Blynku.
     Serial.println("WiFi connecting to Blynk");
-    Blynk.begin(blynkAuth, ssid, password);
-    Blynk.run();
-    
-    Serial.println(Blynk.connected() ? "Blynk connected" : "Timeout on Blynk");
+    Blynk.config(blynkAuth);
+
+    // timeout 3sec
+    Blynk.connect(1000);
+
+    if (Blynk.connected())
+    {
+        Blynk.run();
+    }
+
+    Serial.println(Blynk.connected() ? "Blynk connected" : "Timeout on or internet connection");
     return Blynk.connected();
 }
 
