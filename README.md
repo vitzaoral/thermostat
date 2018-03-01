@@ -1,5 +1,5 @@
 # IoT thermostat with ESP8266 Wemos D1 Mini
-WiFi thermostat based on Wemos D1 Mini and using SHT3X(SHT31-D) temperature/humidity sensor. Data are sent to Thingspeak server and Blynk. Thermostat can be controlled by Blynk application. Project is free to use, code in C++,  created in Visual Code with [PlatfomIO IDE](http://docs.platformio.org/en/latest/ide/vscode.html).
+WiFi thermostat based on Wemos D1 Mini and using SHT3X(SHT31-D) temperature/humidity sensor. Data are sent to Thingspeak server and Blynk. Thermostat can be controlled by Blynk application. Project is free to use, coded in C++,  created in Visual Code with [PlatfomIO IDE](http://docs.platformio.org/en/latest/ide/vscode.html).
 
 ### Currents list:
 * [Wemos D1 Mini](https://www.aliexpress.com/item/D1-mini-V2-Mini-NodeMcu-4M-bytes-Lua-WIFI-Internet-of-Things-development-board-based-ESP8266/32681374223.html)
