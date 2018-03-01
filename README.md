@@ -1,6 +1,19 @@
 # IoT thermostat with ESP8266 Wemos D1 Mini
 WiFi thermostat based on Wemos D1 Mini and using SHT3X(SHT31-D) temperature/humidity sensor. Data are sent to Thingspeak server and Blynk. Thermostat can be controlled by Blynk application. Project is free to use, coded in C++,  created in Visual Code with [PlatfomIO IDE](http://docs.platformio.org/en/latest/ide/vscode.html).
 
+> To build a project, you need to download all the necessary libraries and create the *settings.cpp* file in the src folder:
+```c++
+// Thermostat project settings
+struct Settings
+{
+    const char *thingSpeakWriteApiKey = "Your API Key";
+    const unsigned long thingSpeakChannelId = channelId;
+    const char *ssid = "WIFI ssid";
+    const char *password = "WIFI password";
+    const char *blynkAuth = "blynkAuth";
+};
+```
+
 ### Currents list:
 * [Wemos D1 Mini](https://www.aliexpress.com/item/D1-mini-V2-Mini-NodeMcu-4M-bytes-Lua-WIFI-Internet-of-Things-development-board-based-ESP8266/32681374223.html)
 * [HLK-PM01](https://www.aliexpress.com/item/Free-Shippingn-HLK-PM01-AC-DC-220V-to-5V-mini-power-supply-module-intelligent-household-switch/32319515750.html) 220v to 5v power supply
@@ -11,6 +24,10 @@ WiFi thermostat based on Wemos D1 Mini and using SHT3X(SHT31-D) temperature/humi
 
 ### Schema:
 ![Schema](https://github.com/vitzaoral/thermostat/blob/master/schema/thermostat_sketch.jpg)
+
+### PCB circuit:
+![PCB circuit](https://github.com/vitzaoral/thermostat/blob/master/schema/IMG_5025.JPG)
+![PCB circuit](https://github.com/vitzaoral/thermostat/blob/master/schema/IMG_5026.JPG)
 
 ### Blynk:
 ![Blynk app](https://github.com/vitzaoral/thermostat/blob/master/schema/IMG_5023.PNG)
