@@ -9,6 +9,10 @@ const int relayPinAddress = D5;
 const int readMetheoDataDisplayDataControllThermostatInterval = 10000;
 const int sendDataToInternetInterval = 60000;
 
+const int redLed = D6;
+const int greenLed = D7;
+const int blueLed = D8;
+
 MetheoData metheoData;
 OledDisplay oledDisplay;
 InternetConnection connection;
@@ -19,23 +23,49 @@ Ticker timerSendDataToInternet;
 // Connections to APIs are OK
 bool apisAreConnected = false;
 
+void setupRGBLed()
+{
+    pinMode(redLed, OUTPUT);
+    pinMode(greenLed, OUTPUT);
+    pinMode(blueLed, OUTPUT);
+
+    turnOffLed();
+}
+
+void turnOffLed()
+{
+    // RGB LED is Anode type, so HIGH = turnOff, LOW = turnOn
+    digitalWrite(redLed, HIGH);
+    digitalWrite(greenLed, HIGH);
+    digitalWrite(blueLed, HIGH);
+}
+
+void setLed(int ledPin, bool isTurnOn)
+{
+    turnOffLed();
+    digitalWrite(ledPin, isTurnOn ? LOW : HIGH);
+}
+
 // Set thermostat ON/OFF
 void controllThermostat(MetheoData data)
 {
     // TODO: refactor, asi strcit do InternetConnection :-/
     if (data.dataAreValid())
     {
+        // heating is enabled
         if (EEPROM.read(1) == true)
         {
             int requiredTemperature = EEPROM.read(2);
-            if (requiredTemperature >= 10 && requiredTemperature <= 25 && data.shtTemperature <= requiredTemperature )
+            if (requiredTemperature >= 10 && requiredTemperature <= 25 && data.shtTemperature <= requiredTemperature)
             {
+                setLed(greenLed, true);
                 digitalWrite(relayPinAddress, HIGH);
                 InternetConnection::setStatusToBlynk("Heating ON", "#00FF00");
                 connection.setIsHeatingToBlynk(true);
             }
             else
             {
+                setLed(blueLed, true);
                 digitalWrite(relayPinAddress, LOW);
                 InternetConnection::setStatusToBlynk("Heating OFF", "#FF0000");
                 connection.setIsHeatingToBlynk(false);
@@ -43,6 +73,7 @@ void controllThermostat(MetheoData data)
         }
         else
         {
+            setLed(redLed, true);
             digitalWrite(relayPinAddress, LOW);
             InternetConnection::setStatusToBlynk("Heating not enabled", "#FF0000");
             connection.setIsHeatingToBlynk(false);
@@ -50,6 +81,7 @@ void controllThermostat(MetheoData data)
     }
     else
     {
+        setLed(redLed, true);
         digitalWrite(relayPinAddress, LOW);
         InternetConnection::setStatusToBlynk("Data are invalid, heating OFF.", "#FF0000");
         connection.setIsHeatingToBlynk(false);
@@ -103,6 +135,7 @@ void setup()
     delay(100);
 
     pinMode(relayPinAddress, OUTPUT);
+    setupRGBLed();
     initializeInternetConnection();
     setupTimers();
 }
