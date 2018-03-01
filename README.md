@@ -10,4 +10,8 @@ WiFi thermostat based on Wemos D1 Mini and using SHT3X(SHT31-D) temperature/humi
 * [RGB LED](https://www.aliexpress.com/item/10PCS-5mm-full-color-LED-RGB-red-green-blue-Common-Anode-Four-feet-transparent-highlight-color/32355502594.html) common anode
 
 ### Schema:
-![Schema](https://octodex.github.com/images/yaktocat.png)
+![Schema](https://github.com/vitzaoral/thermostat/blob/master/schema/thermostat_sketch.jpg)
+
+### Blynk:
+![Blynk app](https://github.com/vitzaoral/thermostat/blob/master/schema/IMG_5023.PNG)
+![Blynk app](https://github.com/vitzaoral/thermostat/blob/master/schema/IMG_5024.PNG)
