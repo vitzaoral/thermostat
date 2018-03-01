@@ -23,6 +23,14 @@ Ticker timerSendDataToInternet;
 // Connections to APIs are OK
 bool apisAreConnected = false;
 
+void turnOffLed()
+{
+    // RGB LED is Anode type, so HIGH = turnOff, LOW = turnOn
+    digitalWrite(redLed, HIGH);
+    digitalWrite(greenLed, HIGH);
+    digitalWrite(blueLed, HIGH);
+}
+
 void setupRGBLed()
 {
     pinMode(redLed, OUTPUT);
@@ -30,14 +38,6 @@ void setupRGBLed()
     pinMode(blueLed, OUTPUT);
 
     turnOffLed();
-}
-
-void turnOffLed()
-{
-    // RGB LED is Anode type, so HIGH = turnOff, LOW = turnOn
-    digitalWrite(redLed, HIGH);
-    digitalWrite(greenLed, HIGH);
-    digitalWrite(blueLed, HIGH);
 }
 
 void setLed(int ledPin, bool isTurnOn)
