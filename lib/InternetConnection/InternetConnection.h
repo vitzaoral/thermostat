@@ -4,6 +4,8 @@
 #include <ESP8266WiFi.h>
 #include <ThingSpeak.h>
 #include <MetheoData.h>
+#include <Thermostat.h>
+#include <EEPROM.h>
 
 class InternetConnection
 {
@@ -13,9 +15,11 @@ public:
   void setMeteoDataToThingSpeakObject(MetheoData);
   bool sendDataToThingSpeakApi(void);
   void runBlynk(void);
-  void sendDataToBlynk(MetheoData);
+  bool sendDataToBlynk(MetheoData);
   static void setStatusToBlynk(String, String);
-  void setIsHeatingToBlynk(bool);
+  static void setIsHeatingToBlynk(bool);
+  static void callThermostatControll(void);
+  static void processThermostatStatus(ThermostatStatus);
 };
 
 #endif

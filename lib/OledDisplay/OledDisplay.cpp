@@ -15,7 +15,8 @@ void OledDisplay::printMetheoDataToDisplay(MetheoData data)
 {
     prepareDisplay();
 
-    // temperature SHT
+    // temperature
+    display.println();
     display.println("T:" + String(data.shtTemperature) + " C");
     // humidity
     display.println("H:" + String(data.shtHumidity) + " %");
