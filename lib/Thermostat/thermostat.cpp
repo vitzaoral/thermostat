@@ -46,16 +46,12 @@ ThermostatStatus Thermostat::controllThermostat(MetheoData data)
                 setLed(greenLed, true);
                 digitalWrite(relayPinAddress, HIGH);
                 status = { (char *)"Heating ON", (char *)"#00FF00", true };
-               // InternetConnection::setStatusToBlynk("Heating ON", "#00FF00");
-               // connection.setIsHeatingToBlynk(true);
             }
             else
             {
                 setLed(blueLed, true);
                 digitalWrite(relayPinAddress, LOW);
                 status = { (char *)"Heating OFF", (char *)"#FF0000", false };
-               // InternetConnection::setStatusToBlynk("Heating OFF", "#FF0000");
-               // connection.setIsHeatingToBlynk(false);
             }
         }
         else
@@ -63,8 +59,6 @@ ThermostatStatus Thermostat::controllThermostat(MetheoData data)
             setLed(redLed, true);
             digitalWrite(relayPinAddress, LOW);
             status = { (char *)"Heating not enabled", (char *)"#FF0000", false };
-           // InternetConnection::setStatusToBlynk("Heating not enabled", "#FF0000");
-           // connection.setIsHeatingToBlynk(false);
         }
     }
     else
@@ -72,8 +66,6 @@ ThermostatStatus Thermostat::controllThermostat(MetheoData data)
         setLed(redLed, true);
         digitalWrite(relayPinAddress, LOW);
         status = { (char *)"Data are invalid, heating OFF", (char *)"#FF0000", false };
-       // InternetConnection::setStatusToBlynk("Data are invalid, heating OFF.", "#FF0000");
-       // connection.setIsHeatingToBlynk(false);
     }
     return status;
 }
