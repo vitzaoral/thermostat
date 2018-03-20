@@ -27,8 +27,8 @@ void InternetConnection::callThermostatControll()
     metheoData.setData();
     ThermostatStatus status = Thermostat::controllThermostat(metheoData);
 
-     InternetConnection::setStatusToBlynk(status.message, status.color);
-     InternetConnection::setIsHeatingToBlynk(status.isHeating);
+    InternetConnection::setStatusToBlynk(status.message, status.color);
+    InternetConnection::setIsHeatingToBlynk(status.isHeating);
 }
 
 // Enable/disable thermostat, set value to EEPROM to address 1

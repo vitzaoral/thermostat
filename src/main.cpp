@@ -23,7 +23,10 @@ void readMetheoDataDisplayDataControllThermostat()
 {
     metheoData.setData();
     oledDisplay.printMetheoDataToDisplay(metheoData);
-    Thermostat::controllThermostat(metheoData);
+    ThermostatStatus status = Thermostat::controllThermostat(metheoData);
+
+    InternetConnection::setStatusToBlynk(status.message, status.color);
+    InternetConnection::setIsHeatingToBlynk(status.isHeating);
 }
 
 void initializeInternetConnection()
@@ -42,16 +45,19 @@ void sendDataToInternet()
         bool successThingSpeak = connection.sendDataToThingSpeakApi();
         bool successBlynk = connection.sendDataToBlynk(metheoData);
 
-        if (successThingSpeak && successBlynk) {
+        if (successThingSpeak && successBlynk)
+        {
             Serial.println("Data was sent");
         }
-        else {
+        else
+        {
             Serial.println("No internet connection, try initialize connection");
             apisAreConnected = false;
             initializeInternetConnection();
         }
     }
-    else {
+    else
+    {
         initializeInternetConnection();
     }
 }
