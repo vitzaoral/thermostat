@@ -61,6 +61,19 @@ void InternetConnection::setIsHeatingToBlynk(bool isHeating)
     Blynk.virtualWrite(V11, isHeating ? 1 : 0);
 }
 
+void InternetConnection::initializeOTA(void)
+{
+    ArduinoOTA.setHostname(settings.hostNameOTA);
+    ArduinoOTA.setPassword(settings.passwordOTA);
+    ArduinoOTA.begin();
+}
+
+// Run OTA in loop
+void InternetConnection::handleOTA(void)
+{
+    ArduinoOTA.handle();
+}
+
 // Initialize WiFi connection and ThingSpeak. Return true if connection is sucessfull.
 bool InternetConnection::initializeThingSpeak(void)
 {
@@ -82,6 +95,8 @@ bool InternetConnection::initializeThingSpeak(void)
     }
     Serial.println("");
     Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
 
     ThingSpeak.begin(client);
     return true;

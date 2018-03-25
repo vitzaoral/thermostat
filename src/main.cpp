@@ -1,9 +1,9 @@
 #include <Arduino.h>
+#include <Ticker.h>
 #include <InternetConnection.h>
 #include <MetheoData.h>
 #include <OledDisplay.h>
 #include <Thermostat.h>
-#include <Ticker.h>
 #include <EEPROM.h>
 
 const int readMetheoDataDisplayDataControllThermostatInterval = 10000;
@@ -13,8 +13,10 @@ MetheoData metheoData;
 OledDisplay oledDisplay;
 InternetConnection connection;
 
-Ticker timerReadDataDisplayDataControllThermostat;
-Ticker timerSendDataToInternet;
+void readMetheoDataDisplayDataControllThermostat();
+void sendDataToInternet();
+Ticker timerReadDataDisplayDataControllThermostat(readMetheoDataDisplayDataControllThermostat, readMetheoDataDisplayDataControllThermostatInterval);
+Ticker timerSendDataToInternet(sendDataToInternet, sendDataToInternetInterval);
 
 // Connections to APIs are OK
 bool apisAreConnected = false;
@@ -34,6 +36,7 @@ void initializeInternetConnection()
     if (connection.initializeThingSpeak())
     {
         apisAreConnected = connection.initializeBlynk();
+        connection.initializeOTA();
     }
 }
 
@@ -62,15 +65,16 @@ void sendDataToInternet()
     }
 }
 
-void setupTimers()
+void startTimers()
 {
-    timerReadDataDisplayDataControllThermostat.setCallback(readMetheoDataDisplayDataControllThermostat);
-    timerReadDataDisplayDataControllThermostat.setInterval(readMetheoDataDisplayDataControllThermostatInterval);
     timerReadDataDisplayDataControllThermostat.start();
-
-    timerSendDataToInternet.setCallback(sendDataToInternet);
-    timerSendDataToInternet.setInterval(sendDataToInternetInterval);
     timerSendDataToInternet.start();
+}
+
+void updateTimers()
+{
+    timerReadDataDisplayDataControllThermostat.update();
+    timerSendDataToInternet.update();
 }
 
 // Set up environment before loop
@@ -84,13 +88,13 @@ void setup()
 
     Thermostat::initialize();
     initializeInternetConnection();
-    setupTimers();
+    startTimers();
 }
 
 // Excecute code in forever loop
 void loop()
 {
-    timerReadDataDisplayDataControllThermostat.update();
-    timerSendDataToInternet.update();
+    updateTimers();
     connection.runBlynk();
+    connection.handleOTA();
 }
