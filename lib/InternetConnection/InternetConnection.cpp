@@ -1,5 +1,4 @@
 #include "InternetConnection.h"
-
 #include "../../src/settings.cpp"
 #include <BlynkSimpleEsp8266.h>
 

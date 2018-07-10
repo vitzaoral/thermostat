@@ -82,7 +82,6 @@ void setup()
 {
     // Two bytes for device status (enabled/disabled, required temperature)
     EEPROM.begin(2);
-    // TODO: vyzkouset OTA
     Serial.begin(9600);
     delay(100);
 
